@@ -13,11 +13,11 @@ function initPage() {
     console.log(searchHistory);
 }
 
-const APIKey = "c9a9ed03a355403f4cb9a36e931c0b4a";
-//  When search button is clicked, read the city name typed by the user
+const APIKey = "9723430e37ba2f692d5b6dacd15eadc1";
+//  Click search button and read city name from user
 
     function getWeather(cityName) {
-//  Using saved city name, execute a current condition get request from open weather map api
+//  API pull with saved city name
         let queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
         axios.get(queryURL)
         .then(function(response){
