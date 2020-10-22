@@ -13,7 +13,7 @@ function initPage() {
     console.log(SearchHistory);
 }
 
-const APIKey = "9723430e37ba2f692d5b6dacd15eadc1";
+var APIKey = "9723430e37ba2f692d5b6dacd15eadc1";
 //  Click search button and read city name from user
 
     function getWeather(cityEl) {
@@ -81,3 +81,52 @@ for (i=0; i<forecast.length; i++) {
 });  
 }
 
+var input = document.getElementById("cityIn");
+
+searchBtn.addEventListener("click",function() {
+    let searchTerm = input.value;
+    getWeather(searchTerm);
+    SearchHistory.push(searchTerm);
+    localStorage.setItem("SearchHistory",JSON.stringify(SearchHistory));
+    renderSearchHistory();
+    })
+    
+    var clearEl = document.getElementById("clear");
+    clearEl.addEventListener("click",function() {
+    SearchHistory = [];
+    renderSearchHistory();
+    })
+    
+    function k2f(K) {
+    return Math.floor((K - 273.15) *1.8 +32);
+    }
+    
+    let SearchHistory = JSON.parse(localStorage.getItem("searchBtn")) || [];
+    console.log(SearchHistory);
+
+    function renderSearchHistory() {
+    history.innerHTML = "";
+    for (let i=0; i<SearchHistory.length; i++) {
+    var historyInfo = document.createElement("input");
+    historyInfo.setAttribute("type","text");
+    historyInfo.setAttribute("readonly",true);
+    historyInfo.setAttribute("class", "form-control d-block bg-white");
+    historyInfo.setAttribute("value", SearchHistory[i]);
+    historyInfo.addEventListener("click",function() {
+        getWeather(historyInfo.value);
+    })
+    history.append(historyInfo);
+    }
+    }
+    
+    renderSearchHistory();
+    if (SearchHistory.length > 0) {
+    getWeather(SearchHistory[SearchHistory.length - 1]);
+    }
+    
+    
+    //  Save user's search requests and display them underneath search form
+    //  When page loads, automatically generate current conditions and 5-day forecast for the last city the user searched for
+    
+    
+    initPage();

@@ -5,12 +5,34 @@
 .search-header {
     font-size: 24px;
     font-weight: bold;
+    font-family: monospace;
 }
 
 .city-name {
     font-size: 30px;
+    font-family: monospace;
 }
 
 .forecast-date {
     font-size: 18px;
+    font-family: monospace;
+}
+
+.form-control {
+    font-family: monospace;
+}
+
+.navbar {
+    background-color: rgb(8, 103, 141);
+    font-family: monospace;
+    color: whitesmoke;
+}
+
+.btn-primary {
+    font-family: monospace;
+    background-color: rgb(8, 103, 141);
+}
+
+.col-12 {
+    font-family: monospace;
 }
