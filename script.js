@@ -11,11 +11,14 @@ var currentUV = document.getElementById("UV");
 var history = document.getElementById("history");
 let SearchHistory = JSON.parse(localStorage.getItem("searchBtn")) || [];
 console.log(SearchHistory);
+var currentDate = document.getElementById("currentDay");
+
+$("#currentDay").text(moment().format('MMMM Do YYYY, h:mm:ss a'));
 
 //  When page loads, automatically generate current conditions and 5-day forecast for the last city the user searched for
 
 //API pull with city name
-var APIKey = "9723430e37ba2f692d5b6dacd15eadc1";
+var APIKey = "dcbd037825acb7251c5535a84252386b";
 
 //save user input for city
 input.addEventListener("click", function (event) {
@@ -25,24 +28,17 @@ input.addEventListener("click", function (event) {
  })
 
 function getWeather(userCity) {
-    let queryURL = "api.openweathermap.org/data/2.5/forecast?q=" + userCity + "&appid=" +APIKey;
-                $.get({
+    let queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + userCity + "&appid=" +APIKey;
+                $.ajax({
                 url: queryURL,
                 method: "GET"
               }).then(function (response) {
             console.log(response);
             //  Show current conditions
-            //  Method for using "date" objects obtained from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
-            var currentDate = new Date(response.data.dt * 1000);
-            console.log(currentDate);
-            var day = currentDate.getDate();
-            var month = currentDate.getMonth() + 1;
-            var year = currentDate.getFullYear();
-            cityName.innerHTML = response.data.name + " (" + month + "/" + day + "/" + year + ") ";
             let weatherPic = response.data.weather[0].icon;
             cityPic.setAttribute("src", "https://openweathermap.org/img/wn/" + weatherPic + "@2x.png");
             cityPic.setAttribute("alt", response.data.weather[0].description);
-            currentTemp.innerHTML = "Temperature: " + k2f(response.data.main.temp) + " &#176F";
+            currentTemp.innerHTML = "Temperature: " + response.data.main.temp + " &#176F";
             currentHumidity.innerHTML = "Humidity: " + response.data.main.humidity + "%";
             currentWind.innerHTML = "Wind Speed: " + response.data.wind.speed + " MPH";
             let lat = response.data.coord.lat;
@@ -59,9 +55,12 @@ function getWeather(userCity) {
             //  Pull 5-day forecast
             var cityFive = response.data.id;
             let forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityFive + "&appid=" + APIKey;
-            axios.get(forecastQueryURL)
+            $.ajax({
+                url: forecastQueryURL,
+                method: "GET" })
                 .then(function (response) {
                     // Show forecast under current conditions
+                    console.log(response);
                     console.log(response);
                     var forecast = document.querySelectorAll(".forecast");
                     for (i = 0; i < forecast.length; i++) {
@@ -105,11 +104,6 @@ clearEl.addEventListener("click", function () {
     renderSearchHistory();
 })
 
-//display in farenheit
-function k2f(K) {
-    return Math.floor((K - 273.15) * 1.8 + 32);
-}
-
 //show previously searched cities
 function renderSearchHistory() {
     history.innerHTML = "";
@@ -121,9 +115,8 @@ function renderSearchHistory() {
         historyInfo.setAttribute("value", SearchHistory[i]);
         historyInfo.addEventListener("click", function () {
             getWeather(historyInfo.value);
-        })
         history.append(historyInfo);
-    }
+    })}
 }
 
 renderSearchHistory();
