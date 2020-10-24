@@ -1,2 +1,3 @@
 # weathersearch
-Dashboard to search weekly weather by state
+Dashboard to search weekly weather by city
+
