@@ -32,19 +32,41 @@ function getWeather(userCity) {
                 $.ajax({
                 url: queryURL,
                 method: "GET"
-              }).then(function (response) {
-            console.log(response);
+              })
+              .then(function (weatherData) {
+            //console.log(response);
+            let cityObj = {
+                cityName: weatherData.name,
+                currentTemp: weatherData.main.temp,
+                currentHumidity: weatherData.main.humidity,
+                currentWind: weatherData.wind.speed,
+                cityUVIndex: weatherData.coord,
+                cityPic: weatherData.weather[0].icon
+            }
+
+            function renderWeatherData(cityName, currentTemp, currentHumidity, currentWind, cityUVIndex, cityPic) {
+                cityNameEl.text(cityName)
+                currentDateEl.text(`(${today})`)
+                tempEl.text(`Temperature: ${cityTemp} °F`);
+                humidityEl.text(`Humidity: ${cityHumidity}%`);
+                windSpeedEl.text(`Wind Speed: ${cityWindSpeed} MPH`);
+                uvIndexEl.text(`UV Index: ${uvVal}`);
+                weatherIconEl.attr("src", cityWeatherIcon);
+            }
             //  Show current conditions
-            let weatherPic = response.data.weather[0].icon;
-            cityPic.setAttribute("src", "https://openweathermap.org/img/wn/" + weatherPic + "@2x.png");
-            cityPic.setAttribute("alt", response.data.weather[0].description);
-            currentTemp.innerHTML = "Temperature: " + response.data.main.temp + " &#176F";
-            currentHumidity.innerHTML = "Humidity: " + response.data.main.humidity + "%";
-            currentWind.innerHTML = "Wind Speed: " + response.data.wind.speed + " MPH";
+           //var cityPic = weatherData.weather[0].icon;
+          // cityPic.append("src", "https://openweathermap.org/img/wn/" + cityPic + "@2x.png");
+         // cityPic.append("alt", response.weather[0].description);
+            currentTemp.append = "Temperature: " + response.data.main.temp.text + " &#176F";
+            currentHumidity.append = "Humidity: " + response.data.main.humidity + "%";
+            currentWind.append = "Wind Speed: " + response.data.wind.speed + " MPH";
             let lat = response.data.coord.lat;
             let lon = response.data.coord.lon;
             let UVQueryURL = "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + APIKey + "&cnt=1";
-            axios.get(UVQueryURL)
+                $.ajax({
+                url: UVQueryURL,
+                method: "GET"
+              })
                 .then(function (response) {
                     let UVIndex = document.createElement("span");
                     UVIndex.setAttribute("class", "badge badge-danger");
@@ -72,17 +94,17 @@ function getWeather(userCity) {
                         var forecastYear = forecastDate.getFullYear();
                         var forecastDateEl = document.createElement("p");
                         forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
-                        forecastDateEl.innerHTML = forecastMonth + "/" + forecastDay + "/" + forecastYear;
+                        forecastDateEl.append = forecastMonth + "/" + forecastDay + "/" + forecastYear;
                         forecast[i].append(forecastDateEl);
                         var forecastWeatherEl = document.createElement("img");
                         forecastWeatherEl.setAttribute("src", "https://openweathermap.org/img/wn/" + response.data.list[forecastIndex].weather[0].icon + "@2x.png");
                         forecastWeatherEl.setAttribute("alt", response.data.list[forecastIndex].weather[0].description);
                         forecast[i].append(forecastWeatherEl);
                         var forecastTemp = document.createElement("p");
-                        forecastTemp.innerHTML = "Temp: " + k2f(response.data.list[forecastIndex].main.temp) + " &#176F";
+                        forecastTemp.append = "Temp: " + k2f(response.data.list[forecastIndex].main.temp) + " &#176F";
                         forecast[i].append(forecastTemp);
                         var forecastHumidity = document.createElement("p");
-                        forecastHumidity.innerHTML = "Humidity: " + response.data.list[forecastIndex].main.humidity + "%";
+                        forecastHumidity.append = "Humidity: " + response.data.list[forecastIndex].main.humidity + "%";
                         forecast[i].append(forecastHumidity);
                     }
                 })
@@ -128,3 +150,17 @@ if (SearchHistory.length > 0) {
 //  call function for when page loads to display current and searched weather
 
 //initPage();
+function initPage() {
+    var input = document.getElementById("cityIn");
+    var searchBtn = document.getElementById("searchBtn");
+    var clearEl = document.getElementById("clear");
+    var cityName = document.getElementById("cityName");
+    var cityPic = document.getElementById("currentPic");
+    var currentTemp = document.getElementById("temp");
+    var currentHumidity = document.getElementById("humidity");4
+    var currentWind = document.getElementById("wind");
+    var currentUV = document.getElementById("UV");
+    var history = document.getElementById("history");
+    let SearchHistory = JSON.parse(localStorage.getItem("searchBtn")) || [];
+    console.log(SearchHistory);
+}
